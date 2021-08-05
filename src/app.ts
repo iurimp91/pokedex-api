@@ -1,6 +1,6 @@
 import "./setup";
 
-import express from "express";
+import express, {Request, Response} from "express";
 import cors from "cors";
 import "reflect-metadata";
 
@@ -12,7 +12,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/users", userController.getUsers);
+// Rota: cadastro [pública]
+app.post("/sign-up", userController.signUp);
+
+// Rota: login [pública]
+
+// Rota: pegar todos pokemons [logado]
+
+// Rota: adicionar pokemons na minha lista [logado]
+
+// Rota: remover pokemons na minha lista [logado]
 
 export async function init () {
   await connectDatabase();
