@@ -2,10 +2,10 @@ import { getRepository } from "typeorm";
 
 import User from "../../src/entities/User";
 
-export async function createUser () {
+export async function createUser (email: string, password: string) {
   const user = await getRepository(User).create({
-    email: "email@email.com",
-    password: "123456"
+    email,
+    password
   });
 
   await getRepository(User).save(user);

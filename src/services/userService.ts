@@ -6,7 +6,7 @@ import SignUpParams from "../interfaces/SignUpParams";
 import bcrypt from "bcrypt";
 
 async function findByEmail (email: string) {
-  const user = await getRepository(User).findOne({ email });
+  const user = await getRepository(User).find({ email });
   
   return user;
 }
@@ -16,7 +16,7 @@ async function signUp (params: SignUpParams) {
 
   const user = await findByEmail(email);
   
-  if (user) return true;
+  if (user.length !== 0) return true;
 
   const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -24,4 +24,4 @@ async function signUp (params: SignUpParams) {
   await repository.insert({ email, password: hashedPassword });
 }
 
-export { signUp }
+export { signUp, findByEmail }
