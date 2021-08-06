@@ -7,6 +7,7 @@ import "reflect-metadata";
 import connectDatabase from "./database";
 
 import * as userController from "./controllers/userController";
+import * as pokemonController from "./controllers/pokemonController";
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.post("/sign-up", userController.signUp);
 app.post("/sign-in", userController.signIn);
 
 // Rota: pegar todos pokemons [logado]
+app.get("/pokemons", pokemonController.getPokemons);
 
 // Rota: adicionar pokemons na minha lista [logado]
 
