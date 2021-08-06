@@ -43,6 +43,11 @@ async function getPokemons (userId: number) {
   return pokemons;
 }
 
+async function catchPokemon(userId: number, pokemonId: number) {
+  const userPokemonsRepository = getRepository(UserPokemon);
+  await userPokemonsRepository.insert({ userId, pokemonId });
+}
+
 async function authenticate(token: string) {
   const sessionRepository = getRepository(Session);
 
@@ -58,4 +63,4 @@ async function authenticate(token: string) {
   }
 }
 
-export { getPokemons, authenticate }
+export { getPokemons, catchPokemon, authenticate }

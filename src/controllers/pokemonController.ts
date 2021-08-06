@@ -3,17 +3,18 @@ import { Request, Response } from "express";
 import * as pokemonService from "../services/pokemonService";
 
 export async function getPokemons (req: Request, res: Response) {
-    const userId = res.locals.user.id;
-    const pokemons = await pokemonService.getPokemons(userId)
+  const userId = res.locals.user.id;
+  const pokemons = await pokemonService.getPokemons(userId)
 
-    return res.send(pokemons);
+  return res.send(pokemons);
 }
 
-// export async function catchPokemon (req: Request, res: Response) {
-//   try {
+export async function catchPokemon (req: Request, res: Response) {
+  const pokemonId = Number(req.params.id);
+  const userId = res.locals.user.id;
+  console.log(pokemonId, userId);
 
-//   } catch (err) {
-//     console.error(err.message);
-//     return res.sendStatus(500);
-//   }
-// }
+  await pokemonService.catchPokemon(userId, pokemonId);
+
+  return res.sendStatus(200);
+}

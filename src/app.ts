@@ -26,7 +26,7 @@ app.post("/sign-in", userController.signIn);
 app.get("/pokemons", checkToken, pokemonController.getPokemons);
 
 // Rota: adicionar pokemons na minha lista [logado]
-// app.post("/my-pokemons/:id/add", pokemonController.catchPokemon)
+app.post("/my-pokemons/:id/add", checkToken, pokemonController.catchPokemon)
 
 // Rota: remover pokemons na minha lista [logado]
 // app.post("/my-pokemons/:id/remove", pokemonController.releasePokemon)

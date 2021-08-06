@@ -2,9 +2,6 @@ import { Request, Response } from "express";
 
 import * as userService from "../services/userService";
 
-import SignUpParams from "../interfaces/SignUpParams";
-import SignUpParamsValidation from "../middlewares/SignUpParamsValidation";
-
 export async function signUp (req: Request, res: Response) {
   const emailExists = await userService.signUp(res.locals.signUpParams);
   
