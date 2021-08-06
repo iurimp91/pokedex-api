@@ -1,10 +1,13 @@
 import supertest from "supertest";
-import { getConnection } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
+import Session from "../../src/entities/Session";
 
 import app, { init } from "../../src/app";
 import { clearDatabase } from "../utils/database";
 
 import * as userService from "../../src/services/userService";
+
+import { createUser } from "../factories/userFactory";
 
 beforeAll(async () => {
   await init();
@@ -66,3 +69,63 @@ describe("POST /sign-up", () => {
     expect(response.status).toBe(201);
   });
 });
+
+describe("POST /sign-in", () => {
+  it("should answer with status 400 for body not containing email or password", async () => {
+    await createUser("test@test.com", "123456");
+    
+    const body = { password: "123456" };
+
+    const response = await supertest(app).post("/sign-in").send(body);
+
+    expect(response.status).toBe(400);
+  });
+
+  it("should answer with status 400 for invalid email", async () => {
+    await createUser("test@test.com", "123456");
+    
+    const body = { email: "testtt@test.com", password: "123456" };
+
+    const response = await supertest(app).post("/sign-in").send(body);
+
+    expect(response.status).toBe(400);
+  });
+
+  it("should answer with status 401 for invalid password", async () => {
+    await createUser("test@test.com", "123456");
+    
+    const body = { email: "test@test.com", password: "654321" };
+
+    const response = await supertest(app).post("/sign-in").send(body);
+
+    expect(response.status).toBe(401);
+  });
+
+  it("should answer with status 200 and return token for valid params", async () => {
+    await createUser("test@test.com", "123456");
+    
+    const body = { email: "test@test.com", password: "123456" };
+
+    const response = await supertest(app).post("/sign-in").send(body);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        token: expect.any(String)
+    }));
+  });
+
+  it("should answer with status 200 and create a session for valid params", async () => {
+    await createUser("test@test.com", "123456");
+    
+    const body = { email: "test@test.com", password: "123456" };
+
+    const response = await supertest(app).post("/sign-in").send(body);
+
+    const session = await getRepository(Session).find();
+    
+    expect(response.status).toBe(200);
+    expect(session.length).toBe(1);
+  });
+});
+
