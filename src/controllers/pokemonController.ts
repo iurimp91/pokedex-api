@@ -3,22 +3,17 @@ import { Request, Response } from "express";
 import * as pokemonService from "../services/pokemonService";
 
 export async function getPokemons (req: Request, res: Response) {
-  try {
-    const header = req.header("Authorization");
-
-    if (!header) return res.sendStatus(400);
-
-    const token = header.split("Bearer ")[1];
-
-    const user = await pokemonService.authenticate(token);
-
-    if (user === false) return res.sendStatus(401);
-
-    const pokemons = await pokemonService.getPokemons(user.id)
+    const userId = res.locals.user.id;
+    const pokemons = await pokemonService.getPokemons(userId)
 
     return res.send(pokemons);
-  } catch (err) {
-    console.error(err.message);
-    return res.sendStatus(500);
-  }
 }
+
+// export async function catchPokemon (req: Request, res: Response) {
+//   try {
+
+//   } catch (err) {
+//     console.error(err.message);
+//     return res.sendStatus(500);
+//   }
+// }
