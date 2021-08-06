@@ -30,29 +30,6 @@ app.post("/my-pokemons/:id/add", checkToken, pokemonController.catchPokemon)
 
 app.post("/my-pokemons/:id/remove", checkToken, pokemonController.releasePokemon)
 
-app.post("/populate", async (req,res)=>{
- 
-  for(let i = 1; i < 152; i ++){
-    const result = await axios.get(`https://pokeapi.co/api/v2/pokemon/${i}`)
-    const newPokemon = {
-      id: result.data.id,
-      name: result.data.name,
-      number: result.data.id,
-      image: result.data.sprites.front_default,
-      weight: result.data.weight,
-      height: result.data.height,
-      baseExp: result.data.base_experience,
-      description: ""
-    }
- 
-    const speciesResult = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${i}`)
-    newPokemon.description = speciesResult.data.flavor_text_entries[0].flavor_text.split("\n").join(" ")
-    const pokemon = getRepository(Pokemon).create(newPokemon)
-    const resultquery = await getRepository(Pokemon).save(pokemon)
-  }
-  res.send("OK")
-})
-
 app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.message);
   return res.sendStatus(500);
