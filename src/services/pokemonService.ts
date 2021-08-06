@@ -6,7 +6,7 @@ import UserPokemon from "../entities/UserPokemon";
 
 import PokemonParams from "../interfaces/PokemonParams";
 
-async function getPokemons (userId: number) {
+export async function getPokemons (userId: number) {
   const pokemonRepository = getRepository(Pokemon);
   const userPokemonsRepository = getRepository(UserPokemon);
 
@@ -28,14 +28,7 @@ async function getPokemons (userId: number) {
   
   const pokemons: PokemonParams[] = pokemonsData.map(pokemon => {
     return {
-      id: pokemon.id,
-      name: pokemon.name,
-      number: pokemon.number,
-      image: pokemon.image,
-      weight: pokemon.weight,
-      height: pokemon.height,
-      baseExp: pokemon.baseExp,
-      description: pokemon.description,
+      ...pokemon,
       inMyPokemons: userPokemonsIds[pokemon.id] || false,
     };
   });
@@ -43,12 +36,17 @@ async function getPokemons (userId: number) {
   return pokemons;
 }
 
-async function catchPokemon(userId: number, pokemonId: number) {
+export async function catchPokemon(userId: number, pokemonId: number) {
   const userPokemonsRepository = getRepository(UserPokemon);
   await userPokemonsRepository.insert({ userId, pokemonId });
 }
 
-async function authenticate(token: string) {
+export async function releasePokemon(userId: number, pokemonId: number) {
+  const userPokemonsRepository = getRepository(UserPokemon);
+  await userPokemonsRepository.delete({ userId, pokemonId });
+}
+
+export async function authenticate(token: string) {
   const sessionRepository = getRepository(Session);
 
   const session = await sessionRepository.findOne({
@@ -62,5 +60,3 @@ async function authenticate(token: string) {
     return session.user;
   }
 }
-
-export { getPokemons, catchPokemon, authenticate }

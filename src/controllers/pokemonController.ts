@@ -12,9 +12,17 @@ export async function getPokemons (req: Request, res: Response) {
 export async function catchPokemon (req: Request, res: Response) {
   const pokemonId = Number(req.params.id);
   const userId = res.locals.user.id;
-  console.log(pokemonId, userId);
 
   await pokemonService.catchPokemon(userId, pokemonId);
+
+  return res.sendStatus(200);
+}
+
+export async function releasePokemon (req: Request, res: Response) {
+  const pokemonId = Number(req.params.id);
+  const userId = res.locals.user.id;
+
+  await pokemonService.releasePokemon(userId, pokemonId);
 
   return res.sendStatus(200);
 }
