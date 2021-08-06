@@ -1,6 +1,7 @@
 import joi from "joi";
 import SignUpParams from "../interfaces/SignUpParams";
 import { Request, Response, NextFunction } from "express";
+import sendError from "../utils/sendError";
 
 export default async function SignUpParamsValidation (req: Request, res: Response, next: NextFunction) {
     try {
@@ -20,14 +21,6 @@ export default async function SignUpParamsValidation (req: Request, res: Respons
         res.locals.signUpParams = validParams;
         next();
     } catch(err) {
-        console.error(err.message);
-        if (
-            err.message.includes("email")
-            || err.message.includes("password")
-        ) {
-          return res.sendStatus(400);
-        } else {
-          return res.sendStatus(500);
-        }
+        sendError(err, res);
     }
 };
