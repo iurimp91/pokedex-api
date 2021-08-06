@@ -16,6 +16,7 @@ app.use(express.json());
 app.post("/sign-up", userController.signUp);
 
 // Rota: login [pública]
+app.post("/sign-in", userController.signIn);
 
 // Rota: pegar todos pokemons [logado]
 
